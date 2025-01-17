@@ -1,6 +1,19 @@
-dev.js
-APIKEY
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# IDE and editor files
+.vscode/
+.idea/
 *.swp
 *~
-node_modules/
-node_modules
+
+# Environment and secrets
+.env
+APIKEY
+dev.js
+
+# Test coverage
+coverage/

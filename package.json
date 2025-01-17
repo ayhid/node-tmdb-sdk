@@ -2,18 +2,69 @@
     "name": "tmdbv3",
     "version": "0.1.2",
     "description": "Implementation of TMDb's v3 API",
-    "keywords": ["tmdb","moviedb","movies"],
+    "keywords": [
+        "tmdb",
+        "moviedb",
+        "movies"
+    ],
     "homepage": "https://github.com/raqqa/node-tmdb",
-    "bugs": {"url": "https://github.com/raqqa/node-tmdb/issues"},
+    "bugs": {
+        "url": "https://github.com/raqqa/node-tmdb/issues"
+    },
     "author": "Mikael Emilsson <mikael.emilsson@gmail.com>",
-    "engines": { "node": ">=0.4.0" },
-    "dependencies": {
-        "request": "2.9.x"
+    "engines": {
+        "node": ">=18.0.0"
     },
     "devDependencies": {
-        "should": "*",
-        "mocha": "1.x.x"
+        "@commitlint/cli": "^18.4.4",
+        "@commitlint/config-conventional": "^18.4.4",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/commit-analyzer": "^11.1.0",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^9.2.6",
+        "@semantic-release/npm": "^11.0.2",
+        "@semantic-release/release-notes-generator": "^12.1.0",
+        "@types/node": "^20.0.0",
+        "husky": "^8.0.3",
+        "lint-staged": "^15.2.0",
+        "semantic-release": "^23.0.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.3",
+        "vitest": "^1.2.1"
     },
-    "main": "./lib/tmdb",
-    "repository": { "type": "git", "url": "git://github.com/raqqa/node-tmdb.git" }
+    "type": "module",
+    "main": "./dist/lib/tmdb.js",
+    "types": "./dist/lib/tmdb.d.ts",
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "npm run clean && tsc",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "prepare": "husky install && npm run build",
+        "semantic-release": "semantic-release",
+        "lint-staged": "lint-staged",
+        "commitlint": "commitlint --edit"
+    },
+    "lint-staged": {
+        "*.{ts,tsx}": [
+            "vitest related --run"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/raqqa/node-tmdb.git"
+    },
+    "release": {
+        "branches": ["main", "next"],
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/changelog",
+            "@semantic-release/npm",
+            "@semantic-release/github",
+            "@semantic-release/git"
+        ]
+    },
+    "license": "MIT"
 }
