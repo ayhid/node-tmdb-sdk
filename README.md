@@ -7,13 +7,13 @@
 [![Tests](https://github.com/ayhid/node-tmdb-sdk/actions/workflows/test.yml/badge.svg)](https://github.com/ayhid/node-tmdb-sdk/actions)
 [![TMDB API](https://img.shields.io/badge/TMDB%20API-v3-blue.svg)](https://developer.themoviedb.org/docs)
 
-A lightweight and modern TypeScript SDK for The Movie Database (TMDB) API. This SDK provides easy access to TMDB's extensive movie, TV show, and person data.
+A strongly-typed Node.js SDK for The Movie Database (TMDB) API. This SDK provides easy access to TMDB's extensive movie, TV show, and person data.
 
 > **Note**: This is a complete TypeScript rewrite of the [original tmdbv3 package](https://github.com/raqqa/node-tmdb). While it maintains compatibility with the original API design, the codebase has been entirely modernized with TypeScript, ES Modules, and modern JavaScript practices.
 
 ## Features
 
-- 🚀 Full TypeScript support with type definitions
+- 🚀 Full TypeScript support with types generated from TMDB's OpenAPI specification
 - 🔍 Comprehensive API coverage for movies, people, companies, and collections
 - 📦 Zero dependencies
 - ✨ Modern ES Modules support
@@ -75,6 +75,20 @@ console.log(person.name); // "Elijah Wood"
 // Get person's movie credits
 const personCredits = await tmdb.person.credits(109);
 console.log(personCredits.cast[0].title);
+```
+
+## Type Generation
+
+This SDK uses automatically generated TypeScript types from TMDB's official OpenAPI specification. The types are generated using the following process:
+
+1. The `generate-types` script fetches the latest OpenAPI specification from TMDB's documentation.
+2. Using `@hey-api/openapi-ts`, it generates TypeScript types that match TMDB's API exactly.
+3. The generated types are stored in `src/types/` and are automatically used by the SDK.
+
+To update the types to the latest TMDB API version:
+
+```bash
+npm run generate-types
 ```
 
 ## API Reference
@@ -147,10 +161,6 @@ npm test
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## TODO
-
-- [ ] Automatically generate TypeScript types from the TMDB API OpenAPI specification
 
 ## License
 

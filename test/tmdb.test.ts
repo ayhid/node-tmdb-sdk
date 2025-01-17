@@ -1,12 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { fileURLToPath } from "node:url";
-import fs from "node:fs";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { init } from "../lib/tmdb.js";
 import { mockResponses } from "./__mocks__/tmdb.mock";
-import path from "node:path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const tmdb = init("fake-api-key");
 

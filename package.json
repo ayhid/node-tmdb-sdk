@@ -18,7 +18,8 @@
     "devDependencies": {
         "@commitlint/cli": "^18.4.4",
         "@commitlint/config-conventional": "^18.4.4",
-        "@hey-api/openapi-ts": "^0.3.0",
+        "@hey-api/client-fetch": "^0.1.0",
+        "@hey-api/openapi-ts": "^0.62.1",
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/commit-analyzer": "^11.1.0",
         "@semantic-release/git": "^10.0.1",
@@ -46,7 +47,7 @@
         "semantic-release": "semantic-release",
         "lint-staged": "lint-staged",
         "commitlint": "commitlint --edit",
-        "generate-types": "ts-node scripts/generate-types.ts"
+        "generate-types": "node scripts/generate-types.mjs"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -58,7 +59,10 @@
         "url": "git://github.com/raqqa/node-tmdb.git"
     },
     "release": {
-        "branches": ["main", "next"],
+        "branches": [
+            "main",
+            "next"
+        ],
         "plugins": [
             "@semantic-release/commit-analyzer",
             "@semantic-release/release-notes-generator",

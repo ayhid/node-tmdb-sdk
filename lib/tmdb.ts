@@ -1,383 +1,166 @@
-declare global {
-  interface String {
-    format(...args: any[]): string;
-  }
-}
+import { paths } from "../src/types/types.gen";
 
-String.prototype.format = function (this: string, ...args: any[]): string {
-  let content = this;
-  for (let i = 0; i < args.length; i++) {
-    const replacement = "{" + i + "}";
-    content = content.replace(replacement, args[i]);
-  }
-  return content;
+type ApiVersion = "v3" | "v4";
+
+export type TMDBOptions = {
+  apiKey?: string;
+  accessToken?: string;
+  version?: ApiVersion;
+  baseURL?: string;
 };
 
-interface TMDBConfig {
-  images?: {
-    base_url?: string;
-    secure_base_url?: string;
-    backdrop_sizes?: string[];
-    logo_sizes?: string[];
-    poster_sizes?: string[];
-    profile_sizes?: string[];
-    still_sizes?: string[];
+type Operations = paths;
+type PathsWithMethod = {
+  [P in keyof Operations]: {
+    [M in keyof Operations[P]]: Operations[P][M];
   };
-  change_keys?: string[];
-}
+};
 
-interface TMDBResponse {
-  status_code?: number;
-  status_message?: string;
-  [key: string]: any;
-}
+export class TMDB {
+  private baseURL: string;
+  private headers: HeadersInit;
+  private version: ApiVersion;
+  private language: string = "en-US";
+  private readonly defaultLanguage: string = "en-US";
 
-interface MovieInfoParams {
-  id?: number;
-  imdb_id?: string;
-  language?: string;
-}
+  person = {
+    info: (person_id: number) =>
+      this.request("/person/{person_id}", "get", { person_id }),
+    credits: (person_id: number) =>
+      this.request("/person/{person_id}/movie_credits", "get", { person_id }),
+    images: (person_id: number) =>
+      this.request("/person/{person_id}/images", "get", { person_id }),
+  };
 
-interface MovieIdParam {
-  id: number | string;
-}
+  search = {
+    movie: (query: string, page?: number) =>
+      this.request("/search/movie", "get", { query, page }),
+    person: (query: string, page?: number) =>
+      this.request("/search/person", "get", { query, page }),
+  };
 
-interface MovieSimilarParams extends MovieIdParam {
-  page?: number;
-}
+  company = {
+    info: (company_id: number) =>
+      this.request("/company/{company_id}", "get", { company_id }),
+    movies: (company_id: number) =>
+      this.request("/company/{company_id}/movies", "get", { company_id }),
+  };
 
-interface MovieCastsParams {
-  id: number | string;
-}
+  collection = {
+    info: (collection_id: number) =>
+      this.request("/collection/{collection_id}", "get", { collection_id }),
+  };
 
-class TMDB {
-  private api_key: string;
-  private config: TMDBConfig | null;
-  private base: string;
-  private api_urls: { [key: string]: string };
-  private language: string;
+  movie = {
+    info: (params: { id?: number; imdb_id?: string }) =>
+      this.request("/movie/{movie_id}", "get", {
+        movie_id: params.id,
+        language: this.language,
+      }),
+    alternativeTitles: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/alternative_titles", "get", {
+        movie_id: params.id,
+      }),
+    credits: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/credits", "get", { movie_id: params.id }),
+    images: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/images", "get", { movie_id: params.id }),
+    keywords: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/keywords", "get", {
+        movie_id: params.id,
+      }),
+    releases: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/release_dates", "get", {
+        movie_id: params.id,
+      }),
+    videos: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/videos", "get", { movie_id: params.id }),
+    translations: (params: { id: number }) =>
+      this.request("/movie/{movie_id}/translations", "get", {
+        movie_id: params.id,
+      }),
+  };
 
-  constructor(api_key: string) {
-    this.api_key = api_key;
-    this.config = null;
-    this.base = "https://api.themoviedb.org/3";
-    this.language = "";
+  misc = {
+    latest: () => this.request("/movie/latest", "get"),
+    nowPlaying: () => this.request("/movie/now_playing", "get"),
+    popular: () => this.request("/movie/popular", "get"),
+    topRated: () => this.request("/movie/top_rated", "get"),
+  };
 
-    this.api_urls = {
-      configuration: `${this.base}/configuration?api_key=${this.api_key}`,
-      misc_latest: `${this.base}/movie/latest?api_key=${this.api_key}`,
-      misc_upcoming: `${this.base}/movie/upcoming?page={0}&api_key=${this.api_key}`,
-      misc_now_playing: `${this.base}/movie/now_playing?page={0}&api_key=${this.api_key}`,
-      misc_popular: `${this.base}/movie/popular?page={0}&api_key=${this.api_key}`,
-      misc_top_rated: `${this.base}/movie/top-rated?page={0}&api_key=${this.api_key}`,
-      movie_info: `${this.base}/movie/{0}?api_key=${this.api_key}`,
-      movie_alternative_titles: `${this.base}/movie/{0}/alternative_titles?api_key=${this.api_key}`,
-      movie_credits: `${this.base}/movie/{0}/credits?api_key=${this.api_key}`,
-      movie_images: `${this.base}/movie/{0}/images?api_key=${this.api_key}`,
-      movie_keywords: `${this.base}/movie/{0}/keywords?api_key=${this.api_key}`,
-      movie_releases: `${this.base}/movie/{0}/releases?api_key=${this.api_key}`,
-      movie_videos: `${this.base}/movie/{0}/videos?api_key=${this.api_key}`,
-      movie_translations: `${this.base}/movie/{0}/translations?api_key=${this.api_key}`,
-      movie_similar: `${this.base}/movie/{0}/similar?page={1}&api_key=${this.api_key}`,
-      person_info: `${this.base}/person/{0}?api_key=${this.api_key}`,
-      person_credits: `${this.base}/person/{0}/credits?api_key=${this.api_key}`,
-      person_images: `${this.base}/person/{0}/images?api_key=${this.api_key}`,
-      collection_info: `${this.base}/collection/{0}?api_key=${this.api_key}`,
-      search_movie: `${this.base}/search/movie?query={0}&page={1}&api_key=${this.api_key}`,
-      search_person: `${this.base}/search/person?query={0}&page={1}&api_key=${this.api_key}`,
-      search_companies: `${this.base}/search/company?query={0}&page={1}&api_key=${this.api_key}`,
-      auth_request_token: `${this.base}/authentication/token/new?api_key=${this.api_key}`,
-      auth_session_id: `${this.base}/authentication/session/new?request_token={0}&api_key=${this.api_key}`,
-      write_rate_movie: `${this.base}/movie/{0}/rating?session_id={1}&api_key=${this.api_key}`,
-      company_info: `${this.base}/company/{0}?api_key=${this.api_key}`,
-      company_movies: `${this.base}/company/{0}/movies?api_key=${this.api_key}`,
-      account_info: `${this.base}/account?session_id={0}&api_key=${this.api_key}`,
-      account_add_favorite: `${this.base}/account/{0}/favorite?session_id={1}&api_key=${this.api_key}`,
-      account_favorite_movies: `${this.base}/account/{0}/favorite_movies?session_id={1}&api_key=${this.api_key}`,
-      account_add_movie_watchlist: `${this.base}/account/{0}/movie_watchlist?session_id={1}&api_key=${this.api_key}`,
-      account_movie_watchlist: `${this.base}/account/{0}/movie_watchlist?session_id={1}&api_key=${this.api_key}`,
-      account_rated_movies: `${this.base}/account/{0}/rated_movies?session_id={1}&api_key=${this.api_key}`,
-      genre_list: `${this.base}/genre/list?api_key=${this.api_key}`,
-      genre_movies: `${this.base}/genre/{0}/movies?page={1}&api_key=${this.api_key}`,
+  constructor(options: TMDBOptions = {}) {
+    const {
+      apiKey,
+      accessToken,
+      version = "v3",
+      baseURL = "https://api.themoviedb.org",
+    } = options;
+
+    if (!apiKey && !accessToken) {
+      throw new Error("Either apiKey or accessToken must be provided");
+    }
+
+    this.version = version;
+    this.baseURL = `${baseURL}/${version}`;
+
+    const auth = accessToken ? `Bearer ${accessToken}` : apiKey;
+    this.headers = {
+      Authorization: auth,
+      "Content-Type": "application/json",
     };
-
-    this.configuration().catch((err) => {
-      console.error("Error loading configuration:", err);
-    });
   }
 
-  setLanguage(language: string): void {
-    this.language = language;
-  }
+  // Helper method to make API calls with proper typing
+  private async request<
+    P extends keyof PathsWithMethod,
+    M extends keyof PathsWithMethod[P],
+    Req = PathsWithMethod[P][M]["parameters"],
+    Res = PathsWithMethod[P][M]["responses"][200]["content"]["application/json"]
+  >(
+    path: P,
+    method: M,
+    params?: Req extends { query?: any } ? Req["query"] : never,
+    data?: Req extends {
+      requestBody?: { content: { "application/json": any } };
+    }
+      ? Req["requestBody"]["content"]["application/json"]
+      : never
+  ): Promise<Res> {
+    const url = new URL(`${this.baseURL}${path}`);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined) {
+          url.searchParams.append(key, String(value));
+        }
+      });
+    }
 
-  resetLanguage(): void {
-    this.language = "";
-  }
-
-  private async fetchApi(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<TMDBResponse> {
     const response = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+      method: method as string,
+      headers: this.headers,
+      body: data ? JSON.stringify(data) : undefined,
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = (await response.json()) as TMDBResponse;
-
-    if (data.status_code && data.status_code !== 1 && data.status_code !== 12) {
-      throw data;
-    }
-
-    return data;
+    return response.json();
   }
 
-  async configuration(): Promise<TMDBConfig> {
-    const url =
-      this.api_urls.configuration +
-      (this.language ? `&language=${this.language}` : "");
-    const config = (await this.fetchApi(url)) as unknown as TMDBConfig;
-    this.config = config;
-    return config;
+  setLanguage(language: string) {
+    this.language = language;
   }
 
-  misc = {
-    upcoming: async (page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.misc_upcoming.format(page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    latest: async (): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.misc_latest +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    nowPlaying: async (page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.misc_now_playing.format(page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    popular: async (page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.misc_popular.format(page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    topRated: async (page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.misc_top_rated.format(page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-  };
+  resetLanguage() {
+    this.language = this.defaultLanguage;
+  }
 
-  movie = {
-    info: async (params: MovieInfoParams): Promise<TMDBResponse> => {
-      const id = params.id || params.imdb_id;
-      if (!id) {
-        throw new Error("Either id or imdb_id must be provided");
-      }
-      const url =
-        this.api_urls.movie_info.format(id) +
-        (params.language
-          ? `&language=${params.language}`
-          : this.language
-          ? `&language=${this.language}`
-          : "");
-      return this.fetchApi(url);
-    },
-    alternativeTitles: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.movie_alternative_titles.format(params.id) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    credits: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url = this.api_urls.movie_credits.format(params.id);
-      return this.fetchApi(url);
-    },
-    images: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url = this.api_urls.movie_images.format(params.id);
-      return this.fetchApi(url);
-    },
-    keywords: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url = this.api_urls.movie_keywords.format(params.id);
-      return this.fetchApi(url);
-    },
-    releases: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url = this.api_urls.movie_releases.format(params.id);
-      return this.fetchApi(url);
-    },
-    videos: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url = this.api_urls.movie_videos.format(params.id);
-      return this.fetchApi(url);
-    },
-    translations: async (params: MovieIdParam): Promise<TMDBResponse> => {
-      const url = this.api_urls.movie_translations.format(params.id);
-      return this.fetchApi(url);
-    },
-    similar: async (params: MovieSimilarParams): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.movie_similar.format(params.id, params.page || 1) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-  };
-
-  search = {
-    movie: async (query: string, page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.search_movie.format(query, page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    person: async (query: string, page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.search_person.format(query, page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    companies: async (
-      query: string,
-      page: number = 1
-    ): Promise<TMDBResponse> => {
-      const url = this.api_urls.search_companies.format(query, page);
-      return this.fetchApi(url);
-    },
-  };
-
-  person = {
-    info: async (id: number): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.person_info.format(id) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    credits: async (id: number): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.person_credits.format(id) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    images: async (id: number): Promise<TMDBResponse> => {
-      const url = this.api_urls.person_images.format(id);
-      return this.fetchApi(url);
-    },
-  };
-
-  collection = {
-    info: async (id: number): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.collection_info.format(id) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-  };
-
-  auth = {
-    requestToken: async (): Promise<TMDBResponse> => {
-      return this.fetchApi(this.api_urls.auth_request_token);
-    },
-    sessionId: async (token: string): Promise<TMDBResponse> => {
-      return this.fetchApi(this.api_urls.auth_session_id.format(token));
-    },
-  };
-
-  company = {
-    info: async (id: number): Promise<TMDBResponse> => {
-      return this.fetchApi(this.api_urls.company_info.format(id));
-    },
-    movies: async (id: number): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.company_movies.format(id) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-  };
-
-  account = {
-    info: async (sid: string): Promise<TMDBResponse> => {
-      return this.fetchApi(this.api_urls.account_info.format(sid));
-    },
-    favorite_movies: async (id: number, sid: string): Promise<TMDBResponse> => {
-      return this.fetchApi(
-        this.api_urls.account_favorite_movies.format(id, sid)
-      );
-    },
-    rated_movies: async (id: number, sid: string): Promise<TMDBResponse> => {
-      return this.fetchApi(this.api_urls.account_rated_movies.format(id, sid));
-    },
-    add_favorite: async (
-      aid: number,
-      mid: number,
-      sid: string,
-      isfavorite: boolean
-    ): Promise<TMDBResponse> => {
-      const url = this.api_urls.account_add_favorite.format(aid, sid);
-      return this.fetchApi(url, {
-        method: "POST",
-        body: JSON.stringify({ movie_id: mid, favorite: isfavorite }),
-      });
-    },
-    movie_watchlist: async (id: number, sid: string): Promise<TMDBResponse> => {
-      return this.fetchApi(
-        this.api_urls.account_movie_watchlist.format(id, sid)
-      );
-    },
-    add_movie_watchlist: async (
-      aid: number,
-      mid: number,
-      sid: string,
-      isinwatchlist: boolean
-    ): Promise<TMDBResponse> => {
-      const url = this.api_urls.account_add_movie_watchlist.format(aid, sid);
-      return this.fetchApi(url, {
-        method: "POST",
-        body: JSON.stringify({ movie_id: mid, watchlist: isinwatchlist }),
-      });
-    },
-  };
-
-  write = {
-    rateMovie: async (
-      id: number,
-      sid: string,
-      rating: number
-    ): Promise<TMDBResponse> => {
-      const url = this.api_urls.write_rate_movie.format(id, sid);
-      return this.fetchApi(url, {
-        method: "POST",
-        body: JSON.stringify({ value: rating }),
-      });
-    },
-  };
-
-  genre = {
-    list: async (): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.genre_list +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-    movies: async (id: number, page: number = 1): Promise<TMDBResponse> => {
-      const url =
-        this.api_urls.genre_movies.format(id, page) +
-        (this.language ? `&language=${this.language}` : "");
-      return this.fetchApi(url);
-    },
-  };
+  configuration() {
+    return this.request("/configuration", "get");
+  }
 }
 
 export function init(apikey: string): TMDB {
-  return new TMDB(apikey);
+  return new TMDB({ apiKey: apikey });
 }
