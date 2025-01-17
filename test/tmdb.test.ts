@@ -99,16 +99,6 @@ describe('Company methods', () => {
     const res = await tmdb.company.info(1);
     expect(res.name).toBe('Lucasfilm');
   });
-
-  it('can fetch what movies a company has produced', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockResponses.company.movies),
-    });
-
-    const res = await tmdb.company.movies(1);
-    expect(res.id).toBe(1);
-  });
 });
 
 describe('Collection methods', () => {

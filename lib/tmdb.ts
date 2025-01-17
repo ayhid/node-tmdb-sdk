@@ -3,7 +3,8 @@ import type {
   CollectionDetailsResponse,
   CompanyDetailsData,
   CompanyDetailsResponse,
-  CompanyMoviesResponse,
+  CompanyImagesData,
+  CompanyImagesResponse,
   ConfigurationDetailsResponse,
   MovieAlternativeTitlesData,
   MovieAlternativeTitlesResponse,
@@ -90,10 +91,10 @@ export type Operations = {
       responses: { 200: CompanyDetailsResponse };
     };
   };
-  '/3/company/{company_id}/movies': {
+  '/3/company/{company_id}/images': {
     get: {
-      parameters: never;
-      responses: { 200: CompanyMoviesResponse };
+      parameters: CompanyImagesData;
+      responses: { 200: CompanyImagesResponse };
     };
   };
   '/3/collection/{collection_id}': {
@@ -211,15 +212,15 @@ export class TMDB {
   };
 
   company = {
+    images: (company_id: number): Promise<CompanyImagesResponse> =>
+      this.request('/3/company/{company_id}/images', 'get', {
+        path: { company_id },
+        url: '/3/company/{company_id}/images',
+      }),
     info: (company_id: number): Promise<CompanyDetailsResponse> =>
       this.request('/3/company/{company_id}', 'get', {
         path: { company_id },
         url: '/3/company/{company_id}',
-      }),
-    movies: (company_id: number): Promise<CompanyMoviesResponse> =>
-      this.request('/3/company/{company_id}/movies', 'get', {
-        path: { company_id },
-        url: '/3/company/{company_id}/movies',
       }),
   };
 
@@ -234,7 +235,7 @@ export class TMDB {
   movie = {
     info: (params: { id: number; imdb_id?: string }): Promise<MovieDetailsResponse> =>
       this.request('/3/movie/{movie_id}', 'get', {
-        path: { movie_id: params.id || '' },
+        path: { movie_id: Number(params.id) },
         query: { language: this.language },
         url: '/3/movie/{movie_id}',
       }),
