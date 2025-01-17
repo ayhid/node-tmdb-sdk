@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { init } from "../lib/tmdb.js";
-import { mockResponses } from "./__mocks__/tmdb.mock";
+import { init } from '../lib/tmdb.js';
+import { mockResponses } from './__mocks__/tmdb.mock';
 
-const tmdb = init("fake-api-key");
+const tmdb = init('fake-api-key');
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -13,8 +13,8 @@ beforeEach(() => {
   vi.resetAllMocks();
 });
 
-describe("General methods", () => {
-  it("can get configuration info", async () => {
+describe('General methods', () => {
+  it('can get configuration info', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.configuration),
@@ -25,15 +25,15 @@ describe("General methods", () => {
   });
 });
 
-describe("Person methods", () => {
-  it("can fetch info on a person", async () => {
+describe('Person methods', () => {
+  it('can fetch info on a person', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.person.info),
     });
 
     const res = await tmdb.person.info(109);
-    expect(res.name).toBe("Elijah Wood");
+    expect(res.name).toBe('Elijah Wood');
   });
 
   it("can fetch a person's credits", async () => {
@@ -57,50 +57,50 @@ describe("Person methods", () => {
   });
 });
 
-describe("Search methods", () => {
-  it("can search for movies", async () => {
+describe('Search methods', () => {
+  it('can search for movies', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.search.movie),
     });
 
-    const res = await tmdb.search.movie("transformers");
+    const res = await tmdb.search.movie('transformers');
     expect(res.page).toBe(1);
   });
 
-  it("can hop to another page of a search", async () => {
+  it('can hop to another page of a search', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.search.moviePage4),
     });
 
-    const res = await tmdb.search.movie("transformers", 4);
+    const res = await tmdb.search.movie('transformers', 4);
     expect(res.page).toBe(4);
   });
 
-  it("can search for persons", async () => {
+  it('can search for persons', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.search.person),
     });
 
-    const res = await tmdb.search.person("mikael");
+    const res = await tmdb.search.person('mikael');
     expect(res.page).toBe(1);
   });
 });
 
-describe("Company methods", () => {
-  it("can get info on a company", async () => {
+describe('Company methods', () => {
+  it('can get info on a company', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.company.info),
     });
 
     const res = await tmdb.company.info(1);
-    expect(res.name).toBe("Lucasfilm");
+    expect(res.name).toBe('Lucasfilm');
   });
 
-  it("can fetch what movies a company has produced", async () => {
+  it('can fetch what movies a company has produced', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.company.movies),
@@ -111,64 +111,64 @@ describe("Company methods", () => {
   });
 });
 
-describe("Collection methods", () => {
-  it("can get info on collections", async () => {
+describe('Collection methods', () => {
+  it('can get info on collections', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.collection.info),
     });
 
     const res = await tmdb.collection.info(10);
-    expect(res.name).toBe("Star Wars Collection");
+    expect(res.name).toBe('Star Wars Collection');
   });
 });
 
-describe("Movie methods", () => {
-  it("can get info on a movie", async () => {
+describe('Movie methods', () => {
+  it('can get info on a movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.info),
     });
 
     const res = await tmdb.movie.info({ id: 11 });
-    expect(res.title).toBe("Star Wars: Episode IV - A New Hope");
+    expect(res.title).toBe('Star Wars: Episode IV - A New Hope');
   });
 
-  it("can get info on a movie, in french", async () => {
+  it('can get info on a movie, in french', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.infoFr),
     });
 
-    tmdb.setLanguage("fr");
+    tmdb.setLanguage('fr');
     const res = await tmdb.movie.info({ id: 11 });
-    expect(res.title).toBe("Star Wars : Épisode IV - Un nouvel espoir");
+    expect(res.title).toBe('Star Wars : Épisode IV - Un nouvel espoir');
     tmdb.resetLanguage();
   });
 
-  it("can get data with an imdb-id", async () => {
+  it('can get data with an imdb-id', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.info),
     });
 
-    const res = await tmdb.movie.info({ imdb_id: "tt0076759" });
-    expect(res.title).toBe("Star Wars: Episode IV - A New Hope");
+    const res = await tmdb.movie.info({ imdb_id: 'tt0076759' });
+    expect(res.title).toBe('Star Wars: Episode IV - A New Hope');
   });
 
-  it("can get data with an imdb-id, in french", async () => {
+  it('can get data with an imdb-id, in french', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.infoFr),
     });
 
-    tmdb.setLanguage("fr");
-    const res = await tmdb.movie.info({ imdb_id: "tt0076759" });
-    expect(res.title).toBe("Star Wars : Épisode IV - Un nouvel espoir");
+    tmdb.setLanguage('fr');
+    const res = await tmdb.movie.info({ imdb_id: 'tt0076759' });
+    expect(res.title).toBe('Star Wars : Épisode IV - Un nouvel espoir');
     tmdb.resetLanguage();
   });
 
-  it("can get alternative titles for a movie", async () => {
+  it('can get alternative titles for a movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.alternativeTitles),
@@ -178,16 +178,14 @@ describe("Movie methods", () => {
     expect(res.id).toBe(11);
   });
 
-  it("can detect invalid ids", async () => {
+  it('can detect invalid ids', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 404,
-      statusText: "Not Found",
+      statusText: 'Not Found',
     });
 
-    await expect(tmdb.movie.info({ id: 1000000001 })).rejects.toThrow(
-      "HTTP error! status: 404"
-    );
+    await expect(tmdb.movie.info({ id: 1000000001 })).rejects.toThrow('HTTP error! status: 404');
   });
 
   it("can fetch a movie's credits", async () => {
@@ -198,11 +196,11 @@ describe("Movie methods", () => {
 
     const res = await tmdb.movie.credits({ id: 11 });
     expect(res.id).toBe(11);
-    expect(res.cast[0].character).toBe("Luke Skywalker");
-    expect(res.crew[0].job).toBe("Director");
+    expect(res.cast[0].character).toBe('Luke Skywalker');
+    expect(res.crew[0].job).toBe('Director');
   });
 
-  it("can get images for a movie", async () => {
+  it('can get images for a movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.images),
@@ -212,7 +210,7 @@ describe("Movie methods", () => {
     expect(res.id).toBe(11);
   });
 
-  it("can get keywords for a movie", async () => {
+  it('can get keywords for a movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.keywords),
@@ -222,7 +220,7 @@ describe("Movie methods", () => {
     expect(res.id).toBe(11);
   });
 
-  it("can get release dates for a movie", async () => {
+  it('can get release dates for a movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.releases),
@@ -240,10 +238,10 @@ describe("Movie methods", () => {
 
     const res = await tmdb.movie.videos({ id: 11 });
     expect(res.id).toBe(11);
-    expect(res.results[0].site).toBe("YouTube");
+    expect(res.results[0].site).toBe('YouTube');
   });
 
-  it("can get translations for a movie", async () => {
+  it('can get translations for a movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.movie.translations),
@@ -254,8 +252,8 @@ describe("Movie methods", () => {
   });
 });
 
-describe("Misc methods", () => {
-  it("can get the latest added movie", async () => {
+describe('Misc methods', () => {
+  it('can get the latest added movie', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.misc.latest),
@@ -265,7 +263,7 @@ describe("Misc methods", () => {
     expect(res).toBeDefined();
   });
 
-  it("can get the movies playing in theaters", async () => {
+  it('can get the movies playing in theaters', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.misc.nowPlaying),
@@ -275,7 +273,7 @@ describe("Misc methods", () => {
     expect(res.total_results).toBe(100);
   });
 
-  it("can get popular movies", async () => {
+  it('can get popular movies', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.misc.popular),
@@ -285,7 +283,7 @@ describe("Misc methods", () => {
     expect(res.page).toBe(1);
   });
 
-  it("can get the top rated movies", async () => {
+  it('can get the top rated movies', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockResponses.misc.topRated),

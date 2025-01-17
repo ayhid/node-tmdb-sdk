@@ -54,8 +54,8 @@
         "lint-staged": "lint-staged",
         "commitlint": "commitlint --edit",
         "generate-types": "node scripts/generate-types.mjs",
-        "lint": "eslint . --ext .ts",
-        "lint:fix": "eslint . --ext .ts --fix",
+        "lint": "eslint \"**/*.ts\"",
+        "lint:fix": "eslint \"**/*.ts\" --fix",
         "format": "prettier --write \"**/*.{ts,js,json,md,yml}\"",
         "format:check": "prettier --check \"**/*.{ts,js,json,md,yml}\""
     },
