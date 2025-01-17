@@ -1,193 +1,178 @@
 import type {
   CollectionDetailsData,
+  CollectionDetailsResponse,
   CompanyDetailsData,
-  CompanyMoviesData,
-  ConfigurationDetailsData,
+  CompanyDetailsResponse,
+  CompanyMoviesResponse,
+  ConfigurationDetailsResponse,
   MovieAlternativeTitlesData,
+  MovieAlternativeTitlesResponse,
   MovieCreditsData,
+  MovieCreditsResponse,
   MovieDetailsData,
+  MovieDetailsResponse,
   MovieImagesData,
+  MovieImagesResponse,
   MovieKeywordsData,
-  MovieLatestData,
-  MovieNowPlayingData,
-  MoviePopularData,
+  MovieKeywordsResponse,
+  MovieLatestIdResponse,
+  MovieNowPlayingListResponse,
+  MoviePopularListResponse,
   MovieReleaseDatesData,
-  MovieTopRatedData,
+  MovieReleaseDatesResponse,
+  MovieTopRatedListResponse,
   MovieTranslationsData,
+  MovieTranslationsResponse,
   MovieVideosData,
+  MovieVideosResponse,
   PersonDetailsData,
+  PersonDetailsResponse,
   PersonImagesData,
+  PersonImagesResponse,
   PersonMovieCreditsData,
+  PersonMovieCreditsResponse,
   SearchMovieData,
+  SearchMovieResponse,
   SearchPersonData,
+  SearchPersonResponse,
 } from '../src/types/types.gen';
 
-type ApiVersion = 'v3' | 'v4';
+type ApiVersion = '3';
 
-export type TMDBOptions = {
+type TMDBOptions = {
   apiKey?: string;
   accessToken?: string;
   version?: ApiVersion;
   baseURL?: string;
+  language?: string;
 };
 
-// Type-safe endpoint paths
-const Endpoints = {
-  SEARCH_MOVIE: '/search/movie',
-  SEARCH_PERSON: '/search/person',
-  MOVIE_DETAILS: '/movie/{movie_id}',
-  MOVIE_CREDITS: '/movie/{movie_id}/credits',
-  MOVIE_IMAGES: '/movie/{movie_id}/images',
-  MOVIE_KEYWORDS: '/movie/{movie_id}/keywords',
-  MOVIE_RELEASES: '/movie/{movie_id}/release_dates',
-  MOVIE_VIDEOS: '/movie/{movie_id}/videos',
-  MOVIE_TRANSLATIONS: '/movie/{movie_id}/translations',
-  MOVIE_ALTERNATIVE_TITLES: '/movie/{movie_id}/alternative_titles',
-  PERSON_DETAILS: '/person/{person_id}',
-  PERSON_MOVIE_CREDITS: '/person/{person_id}/movie_credits',
-  PERSON_IMAGES: '/person/{person_id}/images',
-  COMPANY_DETAILS: '/company/{company_id}',
-  COMPANY_MOVIES: '/company/{company_id}/movies',
-  COLLECTION_DETAILS: '/collection/{collection_id}',
-  CONFIGURATION: '/configuration',
-  MOVIE_LATEST: '/movie/latest',
-  MOVIE_NOW_PLAYING: '/movie/now_playing',
-  MOVIE_POPULAR: '/movie/popular',
-  MOVIE_TOP_RATED: '/movie/top_rated',
-} as const;
-
-type Operations = {
-  [Endpoints.SEARCH_MOVIE]: {
+export type Operations = {
+  '/3/configuration': {
     get: {
-      parameters: SearchMovieData;
-      responses: { 200: SearchMovieData };
+      parameters: never;
+      responses: { 200: ConfigurationDetailsResponse };
     };
   };
-  [Endpoints.MOVIE_DETAILS]: {
-    get: {
-      parameters: MovieDetailsData;
-      responses: { 200: MovieDetailsData };
-    };
-  };
-  [Endpoints.CONFIGURATION]: {
-    get: {
-      parameters: ConfigurationDetailsData;
-      responses: { 200: ConfigurationDetailsData };
-    };
-  };
-  [Endpoints.SEARCH_PERSON]: {
-    get: {
-      parameters: SearchPersonData;
-      responses: { 200: SearchPersonData };
-    };
-  };
-  [Endpoints.PERSON_DETAILS]: {
+  '/3/person/{person_id}': {
     get: {
       parameters: PersonDetailsData;
-      responses: { 200: PersonDetailsData };
+      responses: { 200: PersonDetailsResponse };
     };
   };
-  [Endpoints.PERSON_MOVIE_CREDITS]: {
+  '/3/person/{person_id}/movie_credits': {
     get: {
       parameters: PersonMovieCreditsData;
-      responses: { 200: PersonMovieCreditsData };
+      responses: { 200: PersonMovieCreditsResponse };
     };
   };
-  [Endpoints.PERSON_IMAGES]: {
+  '/3/person/{person_id}/images': {
     get: {
       parameters: PersonImagesData;
-      responses: { 200: PersonImagesData };
+      responses: { 200: PersonImagesResponse };
     };
   };
-  [Endpoints.COMPANY_DETAILS]: {
+  '/3/search/movie': {
+    get: {
+      parameters: SearchMovieData;
+      responses: { 200: SearchMovieResponse };
+    };
+  };
+  '/3/search/person': {
+    get: {
+      parameters: SearchPersonData;
+      responses: { 200: SearchPersonResponse };
+    };
+  };
+  '/3/company/{company_id}': {
     get: {
       parameters: CompanyDetailsData;
-      responses: { 200: CompanyDetailsData };
+      responses: { 200: CompanyDetailsResponse };
     };
   };
-  [Endpoints.COMPANY_MOVIES]: {
+  '/3/company/{company_id}/movies': {
     get: {
-      parameters: CompanyMoviesData;
-      responses: { 200: CompanyMoviesData };
+      parameters: never;
+      responses: { 200: CompanyMoviesResponse };
     };
   };
-  [Endpoints.COLLECTION_DETAILS]: {
+  '/3/collection/{collection_id}': {
     get: {
       parameters: CollectionDetailsData;
-      responses: { 200: CollectionDetailsData };
+      responses: { 200: CollectionDetailsResponse };
     };
   };
-  [Endpoints.MOVIE_CREDITS]: {
+  '/3/movie/{movie_id}': {
     get: {
-      parameters: MovieCreditsData;
-      responses: { 200: MovieCreditsData };
+      parameters: MovieDetailsData;
+      responses: { 200: MovieDetailsResponse };
     };
   };
-  [Endpoints.MOVIE_IMAGES]: {
-    get: {
-      parameters: MovieImagesData;
-      responses: { 200: MovieImagesData };
-    };
-  };
-  [Endpoints.MOVIE_KEYWORDS]: {
-    get: {
-      parameters: MovieKeywordsData;
-      responses: { 200: MovieKeywordsData };
-    };
-  };
-  [Endpoints.MOVIE_RELEASES]: {
-    get: {
-      parameters: MovieReleaseDatesData;
-      responses: { 200: MovieReleaseDatesData };
-    };
-  };
-  [Endpoints.MOVIE_VIDEOS]: {
-    get: {
-      parameters: MovieVideosData;
-      responses: { 200: MovieVideosData };
-    };
-  };
-  [Endpoints.MOVIE_TRANSLATIONS]: {
-    get: {
-      parameters: MovieTranslationsData;
-      responses: { 200: MovieTranslationsData };
-    };
-  };
-  [Endpoints.MOVIE_ALTERNATIVE_TITLES]: {
+  '/3/movie/{movie_id}/alternative_titles': {
     get: {
       parameters: MovieAlternativeTitlesData;
-      responses: { 200: MovieAlternativeTitlesData };
+      responses: { 200: MovieAlternativeTitlesResponse };
     };
   };
-  [Endpoints.MOVIE_LATEST]: {
+  '/3/movie/{movie_id}/credits': {
     get: {
-      parameters: MovieLatestData;
-      responses: { 200: MovieLatestData };
+      parameters: MovieCreditsData;
+      responses: { 200: MovieCreditsResponse };
     };
   };
-  [Endpoints.MOVIE_NOW_PLAYING]: {
+  '/3/movie/{movie_id}/images': {
     get: {
-      parameters: MovieNowPlayingData;
-      responses: { 200: MovieNowPlayingData };
+      parameters: MovieImagesData;
+      responses: { 200: MovieImagesResponse };
     };
   };
-  [Endpoints.MOVIE_POPULAR]: {
+  '/3/movie/{movie_id}/keywords': {
     get: {
-      parameters: MoviePopularData;
-      responses: { 200: MoviePopularData };
+      parameters: MovieKeywordsData;
+      responses: { 200: MovieKeywordsResponse };
     };
   };
-  [Endpoints.MOVIE_TOP_RATED]: {
+  '/3/movie/{movie_id}/release_dates': {
     get: {
-      parameters: MovieTopRatedData;
-      responses: { 200: MovieTopRatedData };
+      parameters: MovieReleaseDatesData;
+      responses: { 200: MovieReleaseDatesResponse };
     };
   };
-};
-
-type PathsWithMethod = {
-  [P in keyof Operations]: {
-    [M in keyof Operations[P]]: Operations[P][M];
+  '/3/movie/{movie_id}/videos': {
+    get: {
+      parameters: MovieVideosData;
+      responses: { 200: MovieVideosResponse };
+    };
+  };
+  '/3/movie/{movie_id}/translations': {
+    get: {
+      parameters: MovieTranslationsData;
+      responses: { 200: MovieTranslationsResponse };
+    };
+  };
+  '/3/movie/latest': {
+    get: {
+      parameters: never;
+      responses: { 200: MovieLatestIdResponse };
+    };
+  };
+  '/3/movie/now_playing': {
+    get: {
+      parameters: never;
+      responses: { 200: MovieNowPlayingListResponse };
+    };
+  };
+  '/3/movie/popular': {
+    get: {
+      parameters: never;
+      responses: { 200: MoviePopularListResponse };
+    };
+  };
+  '/3/movie/top_rated': {
+    get: {
+      parameters: never;
+      responses: { 200: MovieTopRatedListResponse };
+    };
   };
 };
 
@@ -197,121 +182,161 @@ export class TMDB {
   private baseURL: string;
   private headers: HeadersInit;
   private version: ApiVersion;
-  private language: string = 'en-US';
+  private language: string;
   private readonly defaultLanguage: string = 'en-US';
 
   person = {
-    info: (person_id: number): Promise<PersonDetailsData> =>
-      this.request(Endpoints.PERSON_DETAILS, 'get', { person_id }),
-    credits: (person_id: number): Promise<PersonMovieCreditsData> =>
-      this.request(Endpoints.PERSON_MOVIE_CREDITS, 'get', { person_id }),
-    images: (person_id: number): Promise<PersonImagesData> =>
-      this.request(Endpoints.PERSON_IMAGES, 'get', { person_id }),
+    info: (person_id: number): Promise<PersonDetailsResponse> =>
+      this.request('/3/person/{person_id}', 'get', {
+        path: { person_id },
+        url: '/3/person/{person_id}',
+      }),
+    credits: (person_id: number): Promise<PersonMovieCreditsResponse> =>
+      this.request('/3/person/{person_id}/movie_credits', 'get', {
+        path: { person_id },
+        url: '/3/person/{person_id}/movie_credits',
+      }),
+    images: (person_id: number): Promise<PersonImagesResponse> =>
+      this.request('/3/person/{person_id}/images', 'get', {
+        path: { person_id },
+        url: '/3/person/{person_id}/images',
+      }),
   };
 
   search = {
-    movie: (query: string, page?: number): Promise<SearchMovieData> =>
-      this.request(Endpoints.SEARCH_MOVIE, 'get', { query, page }),
-    person: (query: string, page?: number): Promise<SearchPersonData> =>
-      this.request(Endpoints.SEARCH_PERSON, 'get', { query, page }),
+    movie: (query: string, page?: number): Promise<SearchMovieResponse> =>
+      this.request('/3/search/movie', 'get', { query: { query, page }, url: '/3/search/movie' }),
+    person: (query: string, page?: number): Promise<SearchPersonResponse> =>
+      this.request('/3/search/person', 'get', { query: { query, page }, url: '/3/search/person' }),
   };
 
   company = {
-    info: (company_id: number): Promise<CompanyDetailsData> =>
-      this.request(Endpoints.COMPANY_DETAILS, 'get', { company_id }),
-    movies: (company_id: number): Promise<CompanyMoviesData> =>
-      this.request(Endpoints.COMPANY_MOVIES, 'get', { company_id }),
+    info: (company_id: number): Promise<CompanyDetailsResponse> =>
+      this.request('/3/company/{company_id}', 'get', {
+        path: { company_id },
+        url: '/3/company/{company_id}',
+      }),
+    movies: (company_id: number): Promise<CompanyMoviesResponse> =>
+      this.request('/3/company/{company_id}/movies', 'get', {
+        path: { company_id },
+        url: '/3/company/{company_id}/movies',
+      }),
   };
 
   collection = {
-    info: (collection_id: number): Promise<CollectionDetailsData> =>
-      this.request(Endpoints.COLLECTION_DETAILS, 'get', { collection_id }),
+    info: (collection_id: number): Promise<CollectionDetailsResponse> =>
+      this.request('/3/collection/{collection_id}', 'get', {
+        path: { collection_id },
+        url: '/3/collection/{collection_id}',
+      }),
   };
 
   movie = {
-    info: (params: { id?: number; imdb_id?: string }): Promise<MovieDetailsData> =>
-      this.request(Endpoints.MOVIE_DETAILS, 'get', {
-        movie_id: params.id,
-        language: this.language,
+    info: (params: { id: number; imdb_id?: string }): Promise<MovieDetailsResponse> =>
+      this.request('/3/movie/{movie_id}', 'get', {
+        path: { movie_id: params.id || '' },
+        query: { language: this.language },
+        url: '/3/movie/{movie_id}',
       }),
-    alternativeTitles: (params: { id: number }): Promise<MovieAlternativeTitlesData> =>
-      this.request(Endpoints.MOVIE_ALTERNATIVE_TITLES, 'get', { movie_id: params.id }),
-    credits: (params: { id: number }): Promise<MovieCreditsData> =>
-      this.request(Endpoints.MOVIE_CREDITS, 'get', { movie_id: params.id }),
-    images: (params: { id: number }): Promise<MovieImagesData> =>
-      this.request(Endpoints.MOVIE_IMAGES, 'get', { movie_id: params.id }),
-    keywords: (params: { id: number }): Promise<MovieKeywordsData> =>
-      this.request(Endpoints.MOVIE_KEYWORDS, 'get', { movie_id: params.id }),
-    releases: (params: { id: number }): Promise<MovieReleaseDatesData> =>
-      this.request(Endpoints.MOVIE_RELEASES, 'get', { movie_id: params.id }),
-    videos: (params: { id: number }): Promise<MovieVideosData> =>
-      this.request(Endpoints.MOVIE_VIDEOS, 'get', { movie_id: params.id }),
-    translations: (params: { id: number }): Promise<MovieTranslationsData> =>
-      this.request(Endpoints.MOVIE_TRANSLATIONS, 'get', { movie_id: params.id }),
+    alternativeTitles: (params: { id: number }): Promise<MovieAlternativeTitlesResponse> =>
+      this.request('/3/movie/{movie_id}/alternative_titles', 'get', {
+        path: { movie_id: params.id },
+        url: '/3/movie/{movie_id}/alternative_titles',
+      }),
+    credits: (params: { id: number }): Promise<MovieCreditsResponse> =>
+      this.request('/3/movie/{movie_id}/credits', 'get', {
+        path: { movie_id: params.id },
+        url: '/3/movie/{movie_id}/credits',
+      }),
+    images: (params: { id: number }): Promise<MovieImagesResponse> =>
+      this.request('/3/movie/{movie_id}/images', 'get', {
+        path: { movie_id: params.id },
+        url: '/3/movie/{movie_id}/images',
+      }),
+    keywords: (params: { id: number }): Promise<MovieKeywordsResponse> =>
+      this.request('/3/movie/{movie_id}/keywords', 'get', {
+        path: { movie_id: params.id.toString() },
+        url: '/3/movie/{movie_id}/keywords',
+      }),
+    releases: (params: { id: number }): Promise<MovieReleaseDatesResponse> =>
+      this.request('/3/movie/{movie_id}/release_dates', 'get', {
+        path: { movie_id: params.id },
+        url: '/3/movie/{movie_id}/release_dates',
+      }),
+    videos: (params: { id: number }): Promise<MovieVideosResponse> =>
+      this.request('/3/movie/{movie_id}/videos', 'get', {
+        path: { movie_id: params.id },
+        url: '/3/movie/{movie_id}/videos',
+      }),
+    translations: (params: { id: number }): Promise<MovieTranslationsResponse> =>
+      this.request('/3/movie/{movie_id}/translations', 'get', {
+        path: { movie_id: params.id },
+        url: '/3/movie/{movie_id}/translations',
+      }),
   };
 
   misc = {
-    latest: (): Promise<MovieLatestData> => this.request(Endpoints.MOVIE_LATEST, 'get'),
-    nowPlaying: (): Promise<MovieNowPlayingData> =>
-      this.request(Endpoints.MOVIE_NOW_PLAYING, 'get'),
-    popular: (): Promise<MoviePopularData> => this.request(Endpoints.MOVIE_POPULAR, 'get'),
-    topRated: (): Promise<MovieTopRatedData> => this.request(Endpoints.MOVIE_TOP_RATED, 'get'),
+    latest: (): Promise<MovieLatestIdResponse> => this.request('/3/movie/latest', 'get'),
+    nowPlaying: (): Promise<MovieNowPlayingListResponse> =>
+      this.request('/3/movie/now_playing', 'get'),
+    popular: (): Promise<MoviePopularListResponse> => this.request('/3/movie/popular', 'get'),
+    topRated: (): Promise<MovieTopRatedListResponse> => this.request('/3/movie/top_rated', 'get'),
   };
 
   constructor(options: TMDBOptions = {}) {
-    const { apiKey, accessToken, version = 'v3', baseURL = 'https://api.themoviedb.org' } = options;
-
-    if (!apiKey && !accessToken) {
-      throw new Error('Either apiKey or accessToken must be provided');
-    }
-
-    this.apiKey = apiKey;
-    this.accessToken = accessToken;
-    this.version = version;
-    this.baseURL = baseURL;
-
-    const auth = accessToken ? `Bearer ${accessToken}` : apiKey;
+    this.baseURL = options.baseURL || 'https://api.themoviedb.org';
+    this.version = (options.version || '3') as ApiVersion;
+    this.language = options.language || 'en-US';
     this.headers = {
-      Authorization: auth,
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${options.apiKey}`,
     };
   }
 
   private async request<
-    TPath extends keyof PathsWithMethod,
-    TMethod extends keyof PathsWithMethod[TPath],
-    TParams extends PathsWithMethod[TPath][TMethod]['parameters'],
-    TResponse extends PathsWithMethod[TPath][TMethod]['responses'][200],
+    TPath extends keyof Operations,
+    TMethod extends keyof Operations[TPath] & string,
+    TParams extends Operations[TPath][TMethod] extends { parameters: infer P } ? P : never,
+    TResponse extends Operations[TPath][TMethod] extends { responses: { 200: infer R } }
+      ? R
+      : never,
   >(path: TPath, method: TMethod, params?: TParams): Promise<TResponse> {
-    const url = new URL(`${this.baseURL}/${this.version}${path}`);
+    const url = new URL(`${this.baseURL}/${this.version}${path as string}`);
 
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined) {
-          url.searchParams.append(key, value.toString());
+    if (params && typeof params === 'object') {
+      const paramObj = params as {
+        path?: Record<string, string | number>;
+        query?: Record<string, string | number>;
+      };
+
+      if (paramObj.path) {
+        let pathWithParams = path as string;
+        for (const [key, value] of Object.entries(paramObj.path)) {
+          pathWithParams = pathWithParams.replace(`{${key}}`, value.toString());
         }
-      });
-    }
+        url.pathname = `/${this.version}${pathWithParams}`;
+      }
 
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    if (this.accessToken) {
-      headers.append('Authorization', `Bearer ${this.accessToken}`);
-    } else if (this.apiKey) {
-      url.searchParams.append('api_key', this.apiKey);
+      if (paramObj.query) {
+        for (const [key, value] of Object.entries(paramObj.query)) {
+          if (value !== undefined) {
+            url.searchParams.append(key, value.toString());
+          }
+        }
+      }
     }
 
     const response = await fetch(url.toString(), {
-      method: method.toString().toUpperCase(),
-      headers,
+      method: method.toUpperCase(),
+      headers: this.headers,
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data;
   }
 
   setLanguage(language: string): void {
@@ -322,8 +347,8 @@ export class TMDB {
     this.language = this.defaultLanguage;
   }
 
-  configuration(): Promise<ConfigurationDetailsData> {
-    return this.request(Endpoints.CONFIGURATION, 'get');
+  configuration(): Promise<ConfigurationDetailsResponse> {
+    return this.request('/3/configuration', 'get');
   }
 }
 
