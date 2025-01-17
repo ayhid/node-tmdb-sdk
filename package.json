@@ -18,6 +18,7 @@
     "devDependencies": {
         "@commitlint/cli": "^18.4.4",
         "@commitlint/config-conventional": "^18.4.4",
+        "@hey-api/openapi-ts": "^0.3.0",
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/commit-analyzer": "^11.1.0",
         "@semantic-release/git": "^10.0.1",
@@ -44,7 +45,8 @@
         "prepare": "husky install && npm run build",
         "semantic-release": "semantic-release",
         "lint-staged": "lint-staged",
-        "commitlint": "commitlint --edit"
+        "commitlint": "commitlint --edit",
+        "generate-types": "ts-node scripts/generate-types.ts"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
