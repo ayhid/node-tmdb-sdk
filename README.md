@@ -1,39 +1,167 @@
-### Installation
+# TMDB Node.js SDK
+
+[![npm version](https://img.shields.io/npm/v/tmdbv3.svg)](https://www.npmjs.com/package/tmdbv3)
+[![npm downloads](https://img.shields.io/npm/dm/tmdbv3.svg)](https://www.npmjs.com/package/tmdbv3)
+[![License](https://img.shields.io/npm/l/tmdbv3.svg)](https://github.com/ayhid/node-tmdb-sdk/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/ayhid/node-tmdb-sdk/actions)
+[![TMDB API](https://img.shields.io/badge/TMDB%20API-v3-blue.svg)](https://developer.themoviedb.org/docs)
+
+A lightweight and modern TypeScript SDK for The Movie Database (TMDB) API. This SDK provides easy access to TMDB's extensive movie, TV show, and person data.
+
+> **Note**: This is a complete TypeScript rewrite of the [original tmdbv3 package](https://github.com/raqqa/node-tmdb). While it maintains compatibility with the original API design, the codebase has been entirely modernized with TypeScript, ES Modules, and modern JavaScript practices.
+
+## Features
+
+- 🚀 Full TypeScript support with type definitions
+- 🔍 Comprehensive API coverage for movies, people, companies, and collections
+- 📦 Zero dependencies
+- ✨ Modern ES Modules support
+- 🧪 Fully tested with Vitest
+
+## Installation
+
+```bash
+npm install tmdbv3
 ```
-npm install --save tmdbv3
+
+## Usage
+
+First, import and initialize the SDK with your TMDB API key:
+
+```typescript
+import { init } from "tmdbv3";
+
+const tmdb = init("your-api-key-here");
 ```
 
-### Usage
-```js
-const tmdb = require('tmdbv3').init(key);
+### Examples
 
-tmdb.misc.latest((err ,res) => {
-	console.log(res.title);
-});
+#### Get Movie Information
 
-tmdb.movie.info(5, (err ,res) => {
-	console.log(res.title);	
-});
+```typescript
+// Get basic movie info
+const movie = await tmdb.movie.info(11);
+console.log(movie.title); // "Star Wars: Episode IV - A New Hope"
 
-tmdb.person.info(109, (err ,res) => {
-	console.log(res.name);	
-});
+// Get movie credits
+const credits = await tmdb.movie.credits(11);
+console.log(credits.cast[0].name); // "Mark Hamill"
 
-// setting french as default language...
-tmdb.setLanguage('fr');
-// and resetting to english.
-tmdb.resetLanguage();
+// Get movie images
+const images = await tmdb.movie.images(11);
+console.log(images.posters[0].file_path);
 ```
-etc.
 
-All methods live right now (2012-08-08) implemented.
+#### Search Movies and People
 
-Testing is done by mocha.
+```typescript
+// Search for movies
+const movieResults = await tmdb.search.movies("Star Wars");
+console.log(movieResults.results[0].title);
 
-See [the TMDb page about the API](https://www.themoviedb.org/documentation/api) or [view the full API](http://docs.themoviedb.apiary.io/)
+// Search for people
+const personResults = await tmdb.search.persons("Elijah Wood");
+console.log(personResults.results[0].name);
+```
 
-### Other
+#### Get Person Information
 
-For TMDb's old v2.1 api, go to [kkarikos repo] (https://raw.github.com/kkarikos/tmdb).
+```typescript
+// Get person details
+const person = await tmdb.person.info(109);
+console.log(person.name); // "Elijah Wood"
 
-kkariko: I used part of your request code here, contact me if you have questions, I can't find a way to contact you.
+// Get person's movie credits
+const personCredits = await tmdb.person.credits(109);
+console.log(personCredits.cast[0].title);
+```
+
+## API Reference
+
+### Movies
+
+- `movie.info(id: number)` - Get basic movie information
+- `movie.credits(id: number)` - Get movie cast and crew
+- `movie.images(id: number)` - Get movie posters and backdrops
+- `movie.videos(id: number)` - Get movie trailers and videos
+- `movie.keywords(id: number)` - Get movie keywords
+- `movie.releases(id: number)` - Get movie release dates
+- `movie.translations(id: number)` - Get available translations
+- `movie.alternativeTitles(id: number)` - Get alternative titles
+
+### People
+
+- `person.info(id: number)` - Get person information
+- `person.credits(id: number)` - Get person's movie credits
+- `person.images(id: number)` - Get person's images
+
+### Companies
+
+- `company.info(id: number)` - Get company information
+- `company.movies(id: number)` - Get movies from a company
+
+### Collections
+
+- `collection.info(id: number)` - Get collection information
+
+### Search
+
+- `search.movies(query: string)` - Search for movies
+- `search.persons(query: string)` - Search for people
+
+### Miscellaneous
+
+- `misc.latest()` - Get the latest movie
+- `misc.nowPlaying()` - Get movies in theaters
+- `misc.popular()` - Get popular movies
+- `misc.topRated()` - Get top rated movies
+
+## Development
+
+### Prerequisites
+
+- Node.js >= 16
+- npm >= 7
+
+### Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run tests:
+   ```bash
+   npm test
+   ```
+
+### Testing
+
+The SDK uses Vitest for testing. Run the test suite:
+
+```bash
+npm test
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## TODO
+
+- [ ] Automatically generate TypeScript types from the TMDB API OpenAPI specification
+
+## License
+
+MIT
+
+## Acknowledgments
+
+- [The Movie Database (TMDB)](https://www.themoviedb.org/) for providing the API
+- [raqqa](https://github.com/raqqa) for creating the original [node-tmdb](https://github.com/raqqa/node-tmdb) package
+- The TMDB development community
+
+---
+
+Last updated: January 17, 2025
