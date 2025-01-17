@@ -1,18 +1,12 @@
 import eslint from '@eslint/js';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettier from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import prettier from 'eslint-plugin-prettier';
+import tsParser from '@typescript-eslint/parser';
+import tseslint from '@typescript-eslint/eslint-plugin';
 
 export default [
   {
-    ignores: [
-      'node_modules/**',
-      'dist/**',
-      'coverage/**',
-      '**/*.d.ts',
-      'src/types/types.gen.ts',
-    ],
+    ignores: ['node_modules/**', 'dist/**', 'coverage/**', '**/*.d.ts', 'src/types/types.gen.ts'],
   },
   eslint.configs.recommended,
   {
@@ -26,7 +20,10 @@ export default [
         tsconfigRootDir: '.',
       },
       globals: {
-        global: true,
+        fetch: 'readonly',
+        Headers: 'readonly',
+        URL: 'readonly',
+        Response: 'readonly',
       },
     },
     plugins: {
@@ -41,15 +38,26 @@ export default [
       '@typescript-eslint/no-explicit-any': ['warn'],
       '@typescript-eslint/no-floating-promises': ['error'],
       '@typescript-eslint/await-thenable': ['error'],
-      'prettier/prettier': ['error', {
-        singleQuote: true,
-        trailingComma: 'all',
-        printWidth: 100,
-        tabWidth: 2,
-        endOfLine: 'lf'
-      }],
+      'prettier/prettier': [
+        'error',
+        {
+          singleQuote: true,
+          trailingComma: 'all',
+          printWidth: 100,
+          tabWidth: 2,
+          endOfLine: 'lf',
+        },
+      ],
       'no-console': ['warn'],
-      'eqeqeq': ['error', 'always'],
+      eqeqeq: ['error', 'always'],
+    },
+  },
+  {
+    files: ['test/**/*.ts'],
+    languageOptions: {
+      globals: {
+        global: true,
+      },
     },
   },
   eslintConfigPrettier,

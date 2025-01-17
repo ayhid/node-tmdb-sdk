@@ -1,13 +1,13 @@
 name: Bug Report
 description: File a bug report
-title: "[Bug]: "
-labels: ["bug"]
+title: '[Bug]: '
+labels: ['bug']
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
-  
+
   - type: textarea
     id: what-happened
     attributes:
@@ -16,7 +16,7 @@ body:
       placeholder: Tell us what you see!
     validations:
       required: true
-      
+
   - type: input
     id: version
     attributes:
@@ -47,7 +47,7 @@ body:
       render: typescript
       placeholder: |
         import { init } from 'tmdbv3';
-        
+
         const tmdb = init('your-api-key');
         // Code that reproduces the issue...
     validations:

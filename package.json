@@ -1,86 +1,87 @@
 {
-    "name": "tmdbv3",
-    "version": "0.1.2",
-    "description": "Implementation of TMDb's v3 API",
-    "keywords": [
-        "tmdb",
-        "moviedb",
-        "movies"
+  "name": "tmdbv3",
+  "version": "0.1.2",
+  "description": "Implementation of TMDb's v3 API",
+  "keywords": [
+    "tmdb",
+    "moviedb",
+    "movies"
+  ],
+  "homepage": "https://github.com/raqqa/node-tmdb",
+  "bugs": {
+    "url": "https://github.com/raqqa/node-tmdb/issues"
+  },
+  "author": "Mikael Emilsson <mikael.emilsson@gmail.com>",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "@hey-api/client-fetch": "^0.1.0",
+    "@hey-api/openapi-ts": "^0.62.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^11.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.5",
+    "@semantic-release/npm": "^11.0.2",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.4.2",
+    "semantic-release": "^23.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "vitest": "^1.2.1"
+  },
+  "type": "module",
+  "main": "./dist/lib/tmdb.js",
+  "types": "./dist/lib/tmdb.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky install && npm run build",
+    "semantic-release": "semantic-release",
+    "lint-staged": "lint-staged",
+    "commitlint": "commitlint --edit",
+    "generate-types": "node scripts/generate-types.mjs",
+    "lint": "eslint \"**/*.ts\"",
+    "lint:fix": "eslint \"**/*.ts\" --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,md,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md,yml}\"",
+    "check": "npm run format:check && npm run lint && npm run test"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "vitest related --run"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/raqqa/node-tmdb.git"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
     ],
-    "homepage": "https://github.com/raqqa/node-tmdb",
-    "bugs": {
-        "url": "https://github.com/raqqa/node-tmdb/issues"
-    },
-    "author": "Mikael Emilsson <mikael.emilsson@gmail.com>",
-    "engines": {
-        "node": ">=18.0.0"
-    },
-    "devDependencies": {
-        "@commitlint/cli": "^18.4.4",
-        "@commitlint/config-conventional": "^18.4.4",
-        "@hey-api/client-fetch": "^0.1.0",
-        "@hey-api/openapi-ts": "^0.62.1",
-        "@semantic-release/changelog": "^6.0.3",
-        "@semantic-release/commit-analyzer": "^11.1.0",
-        "@semantic-release/git": "^10.0.1",
-        "@semantic-release/github": "^9.2.5",
-        "@semantic-release/npm": "^11.0.2",
-        "@semantic-release/release-notes-generator": "^12.1.0",
-        "@types/node": "^20.0.0",
-        "@typescript-eslint/eslint-plugin": "^8.20.0",
-        "@typescript-eslint/parser": "^8.20.0",
-        "eslint": "^9.18.0",
-        "eslint-config-prettier": "^10.0.1",
-        "eslint-plugin-prettier": "^5.2.2",
-        "husky": "^8.0.3",
-        "lint-staged": "^15.2.0",
-        "prettier": "^3.4.2",
-        "semantic-release": "^23.0.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.7.3",
-        "vitest": "^1.2.1"
-    },
-    "type": "module",
-    "main": "./dist/lib/tmdb.js",
-    "types": "./dist/lib/tmdb.d.ts",
-    "scripts": {
-        "clean": "rm -rf dist",
-        "build": "npm run clean && tsc",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "prepare": "husky install && npm run build",
-        "semantic-release": "semantic-release",
-        "lint-staged": "lint-staged",
-        "commitlint": "commitlint --edit",
-        "generate-types": "node scripts/generate-types.mjs",
-        "lint": "eslint \"**/*.ts\"",
-        "lint:fix": "eslint \"**/*.ts\" --fix",
-        "format": "prettier --write \"**/*.{ts,js,json,md,yml}\"",
-        "format:check": "prettier --check \"**/*.{ts,js,json,md,yml}\""
-    },
-    "lint-staged": {
-        "*.{ts,tsx}": [
-            "vitest related --run"
-        ]
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/raqqa/node-tmdb.git"
-    },
-    "release": {
-        "branches": [
-            "main",
-            "next"
-        ],
-        "plugins": [
-            "@semantic-release/commit-analyzer",
-            "@semantic-release/release-notes-generator",
-            "@semantic-release/changelog",
-            "@semantic-release/npm",
-            "@semantic-release/github",
-            "@semantic-release/git"
-        ]
-    },
-    "license": "MIT"
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ]
+  },
+  "license": "MIT"
 }

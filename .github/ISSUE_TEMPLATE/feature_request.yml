@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest an idea for this project
-title: "[Feature]: "
-labels: ["enhancement"]
+title: '[Feature]: '
+labels: ['enhancement']
 body:
   - type: markdown
     attributes:
@@ -24,7 +24,7 @@ body:
       description: A clear and concise description of what you want to happen.
       placeholder: |
         I would like to be able to...
-        
+
         Example usage:
         ```typescript
         // Your example code here

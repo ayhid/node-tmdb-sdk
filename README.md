@@ -30,9 +30,9 @@ npm install tmdbv3
 First, import and initialize the SDK with your TMDB API key:
 
 ```typescript
-import { init } from "tmdbv3";
+import { init } from 'tmdbv3';
 
-const tmdb = init("your-api-key-here");
+const tmdb = init('your-api-key-here');
 ```
 
 ### Examples
@@ -57,11 +57,11 @@ console.log(images.posters[0].file_path);
 
 ```typescript
 // Search for movies
-const movieResults = await tmdb.search.movies("Star Wars");
+const movieResults = await tmdb.search.movies('Star Wars');
 console.log(movieResults.results[0].title);
 
 // Search for people
-const personResults = await tmdb.search.persons("Elijah Wood");
+const personResults = await tmdb.search.persons('Elijah Wood');
 console.log(personResults.results[0].name);
 ```
 
