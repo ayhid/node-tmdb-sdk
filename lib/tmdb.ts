@@ -1,4 +1,10 @@
-import { paths } from "../src/types/types.gen";
+import type {
+  ConfigurationDetailsData,
+  MovieDetailsData,
+  SearchMovieData,
+  SearchPersonData,
+  TvSeriesDetailsData,
+} from "../src/types/types.gen";
 
 type ApiVersion = "v3" | "v4";
 
@@ -9,7 +15,40 @@ export type TMDBOptions = {
   baseURL?: string;
 };
 
-type Operations = paths;
+type Operations = {
+  "/search/movie": {
+    get: {
+      parameters: SearchMovieData;
+      responses: { 200: any };
+    };
+  };
+  "/movie/{movie_id}": {
+    get: {
+      parameters: MovieDetailsData;
+      responses: { 200: any };
+    };
+  };
+  "/configuration": {
+    get: {
+      parameters: ConfigurationDetailsData;
+      responses: { 200: any };
+    };
+  };
+  "/search/person": {
+    get: {
+      parameters: SearchPersonData;
+      responses: { 200: any };
+    };
+  };
+  "/tv/{series_id}": {
+    get: {
+      parameters: TvSeriesDetailsData;
+      responses: { 200: any };
+    };
+  };
+  // Add more endpoints as needed
+};
+
 type PathsWithMethod = {
   [P in keyof Operations]: {
     [M in keyof Operations[P]]: Operations[P][M];
