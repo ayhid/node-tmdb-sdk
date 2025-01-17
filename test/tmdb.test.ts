@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs";
 import { init } from "../lib/tmdb.js";
@@ -9,10 +8,7 @@ import path from "node:path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const key = fs
-  .readFileSync(path.join(__dirname, "APIKEY"), "utf8")
-  .replace(/(\r\n|\n|\r)/gm, "");
-const tmdb = init(key);
+const tmdb = init("fake-api-key");
 
 // Mock fetch globally
 const mockFetch = vi.fn();

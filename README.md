@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/tmdbv3.svg)](https://www.npmjs.com/package/tmdbv3)
 [![License](https://img.shields.io/npm/l/tmdbv3.svg)](https://github.com/ayhid/node-tmdb-sdk/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
-[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/ayhid/node-tmdb-sdk/actions)
+[![Tests](https://github.com/ayhid/node-tmdb-sdk/actions/workflows/test.yml/badge.svg)](https://github.com/ayhid/node-tmdb-sdk/actions)
 [![TMDB API](https://img.shields.io/badge/TMDB%20API-v3-blue.svg)](https://developer.themoviedb.org/docs)
 
 A lightweight and modern TypeScript SDK for The Movie Database (TMDB) API. This SDK provides easy access to TMDB's extensive movie, TV show, and person data.
